@@ -4,17 +4,18 @@ const Bodies = Matter.Bodies;
 const Constraint = Matter.Constraint;
 const Body = Matter.Body;
 
-var engine, world, bg, fundoImg;
+var engine, world, bg, backgroundImg;
 var caixa1, caixa2, porco1, tronco1;
 var caixa3, caixa4, porco2, tronco2;
 var caixa5, tronco3, tronco4;
-var dia, solo, platforma;
+var fundoImg, solo, plataforma;
 var bird, estilingue;
 var estado = "no estilingue";
+var pontos = 0;
 
 function preload() {
-    pegarFundo();
-    dia = loadImage("sprites/bg.png");
+    getBackgroundImg();
+    fundoImg = loadImage("sprites/base.png");
 }
 
 function setup(){
@@ -24,7 +25,7 @@ function setup(){
 
 
     solo = new Solo(600,height,1200,20);
-    platforma = new Solo(150, 305, 300, 170);
+    plataforma = new Solo(150, 305, 300, 170);
 
     caixa1 = new Caixa(700,320,70,70);
     caixa2 = new Caixa(920,320,70,70);
@@ -33,7 +34,7 @@ function setup(){
 
     caixa3 = new Caixa(700,240,70,70);
     caixa4 = new Caixa(920,240,70,70);
-    pig3 = new Porco(810, 220);
+    porco2 = new Porco(810, 220);
 
     tronco3 =  new Tronco(810,180,300, PI/2);
 
@@ -47,22 +48,30 @@ function setup(){
 }
 
 function draw(){
-    if (fundoImg){
-        background(fundoImg);
+    if (backgroundImg){
+        background(backgroundImg);
     } else {
-        background(dia);
+        background(fundoImg);
     }
+
+    noStroke();
+    textSize(35);
+    fill("white");
+    text("Pontos: "+pontos, width-300, 50);
+
     Engine.update(engine);
     //strokeWeight(4);
     caixa1.display();
     caixa2.display();
     solo.display();
     porco1.display();
+    porco1.score();
     tronco1.display();
 
     caixa3.display();
     caixa4.display();
-    pig3.display();
+    porco2.display();
+    porco2.score();
     tronco3.display();
 
     caixa5.display();
@@ -70,7 +79,7 @@ function draw(){
     log5.display();
 
     bird.display();
-    platforma.display();
+    plataforma.display();
     //log6.display();
     estilingue.display();    
 }
@@ -88,13 +97,13 @@ function mouseReleased(){
 }
 
 function keyPressed(){
-    if(keyCode === 32){
-        estilingue.ligar();
-        estado = "no estilingue";
-    }
+    // if(keyCode === 32){
+    //     estilingue.ligar();
+    //     estado = "no estilingue";
+    // }
 }
 
-async function pegarFundo(){
+async function getBackgroundImg(){
     var response = await fetch("http://worldtimeapi.org/api/timezone/America/Sao_Paulo");
     console.log(response);
     var responseJSON = await response.json();
@@ -108,6 +117,6 @@ async function pegarFundo(){
     } else{
         bg = "sprites/bg2.jpg";
     }
-    fundoImg = loadImage(bg);
-    console.log(fundoImg);
+    backgroundImg = loadImage(bg);
+    console.log(backgroundImg);
 }
